@@ -1,0 +1,79 @@
+resources:
+  - name: git_repo
+    type: GitRepo
+    configuration:
+      gitProvider: githubaokkath                   
+      path: aokkath/JFrogPipelines   
+      branches:
+        include: main
+
+  - name: elk_image
+    type: Image
+    configuration:
+      registry: aokkath_artifactory                                # <-- replace with your artifactory integration
+      sourceRepository: docker_local               # <-- required if registry is Artifactory
+      imageName: af3d86e9e73e34249b97768390d43a97-104840554.us-east-1.elb.amazonaws.com/docker-local/elk  # < -- replace with your image path and name
+      imageTag: latest
+      autoPull: true
+      
+  - name: elk_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: aokkath_artifactory
+      buildName: elk_build
+      buildNumber: 1    
+
+  - name: elk_promoted_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: aokkath_artifactory
+      buildName: elk_build
+      buildNumber: 1
+      
+
+pipelines:
+  - name: pipeline_elk
+    steps:
+      - name: docker_build
+        type: DockerBuild
+        configuration:
+          affinityGroup: elk_group
+          dockerFileLocation: .
+          dockerFileName: Dockerfile
+          dockerImageName: af3d86e9e73e34249b97768390d43a97-104840554.us-east-1.elb.amazonaws.com/docker-local/elk  # replace with your image path and name
+          dockerImageTag: ${run_number}
+          inputResources:
+            - name: elk_repo
+          integrations:
+            - name: aokkath_artifactory                            # <-- replace with your artifactory integration
+
+      - name: docker_push
+        type: DockerPush
+        configuration:
+          affinityGroup: elk_group
+          targetRepository: docker-local
+          integrations:
+            - name: aokkath_artifactory                            # <-- replace with your artifactory integration
+          inputSteps:
+            - name: docker_build
+          outputResources:
+            - name: elk_image
+
+      - name: publish_elk_build
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: docker_push
+          outputResources:
+            - name: elk_build_info
+
+      - name: promote_elk_build
+        type: PromoteBuild
+        configuration:
+          targetRepository: demo-pipelines
+          integrations:
+            - name: art
+          inputResources:
+            - name: elk_build_info
+          outputResources:
+            - name: elk_promoted_build_info
