@@ -3,7 +3,7 @@ resources:
   - name: source_code
     type: GitRepo
     configuration:
-      gitProvider: github
+      gitProvider: githubaokkath
       path: aokkath/JFrogPipelines
       branches:
         include: main
