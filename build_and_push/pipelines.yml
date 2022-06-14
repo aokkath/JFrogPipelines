@@ -1,5 +1,5 @@
 resources:
-  - name: git_repo
+  - name: elk_repo
     type: GitRepo
     configuration:
       gitProvider: githubaokkath                   
