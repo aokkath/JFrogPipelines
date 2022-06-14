@@ -34,7 +34,7 @@ resources:
 pipelines:
   - name: pipeline_elk
     configuration:
-      nodePool: aokkathaws
+      nodePool: aws_nodepool
     steps:
       - name: docker_build
         type: DockerBuild
