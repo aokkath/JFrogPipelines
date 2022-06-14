@@ -33,6 +33,8 @@ resources:
 
 pipelines:
   - name: pipeline_elk
+    configuration:
+      nodePool: aokkathaws
     steps:
       - name: docker_build
         type: DockerBuild
@@ -58,6 +60,7 @@ pipelines:
             - name: docker_build
           outputResources:
             - name: elk_image
+          nodePool: aokkathaws
 
       - name: publish_elk_build
         type: PublishBuildInfo
@@ -66,6 +69,7 @@ pipelines:
             - name: docker_push
           outputResources:
             - name: elk_build_info
+          nodePool: aokkathaws
 
       - name: promote_elk_build
         type: PromoteBuild
@@ -77,3 +81,4 @@ pipelines:
             - name: elk_build_info
           outputResources:
             - name: elk_promoted_build_info
+          nodePool: aokkathaws
