@@ -12,7 +12,7 @@ resources:
     configuration:
       registry: aokkath_artifactory                                # <-- replace with your artifactory integration
       sourceRepository: docker_local               # <-- required if registry is Artifactory
-      imageName: af3d86e9e73e34249b97768390d43a97-104840554.us-east-1.elb.amazonaws.com/zws-docker-local/elk  # < -- replace with your image path and name
+      imageName: af3d86e9e73e34249b97768390d43a97-104840554.us-east-1.elb.amazonaws.com/docker-local/elk  # < -- replace with your image path and name
       imageTag: latest
       autoPull: true
       
@@ -42,7 +42,7 @@ pipelines:
           affinityGroup: elk_group
           dockerFileLocation: .
           dockerFileName: Dockerfile
-          dockerImageName: af3d86e9e73e34249b97768390d43a97-104840554.us-east-1.elb.amazonaws.com/zws-docker-local/elk  # replace with your image path and name
+          dockerImageName: af3d86e9e73e34249b97768390d43a97-104840554.us-east-1.elb.amazonaws.com/docker-local/elk  # replace with your image path and name
           dockerImageTag: ${run_number}
           inputResources:
             - name: elk_repo
