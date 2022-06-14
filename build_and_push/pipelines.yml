@@ -5,7 +5,7 @@ resources:
       gitProvider: githubaokkath                   
       path: aokkath/JFrogPipelines   
       branches:
-        include: main
+        include: aokkath
 
   - name: elk_image
     type: Image
